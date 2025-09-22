@@ -2,10 +2,10 @@ package org.example.tests;
 
 import io.qameta.allure.*;
 import org.example.pages.FormFieldsPage;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import static org.example.config.Config.FORM_FIELDS_URL;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.testng.Assert.assertTrue;
 
 @Epic("Автоматизация веб-форм")
 @Feature("Взаимодействие с полями формы")
@@ -15,11 +15,9 @@ public class FormFieldsTest extends BaseTest {
     @Story("Заполнение всех полей формы и отправка")
     @Severity(SeverityLevel.CRITICAL)
     @Description("Тест проверяет успешное заполнение формы и появление алерта 'Message received!'")
-    void testFillAndSubmitForm() {
+    public void testFillAndSubmitForm() {
         driver.get(FORM_FIELDS_URL);
         FormFieldsPage formPage = new FormFieldsPage(driver);
-
-        takeScreenshot("Страница формы загружена");
 
         formPage.fillName("Иван Иванов")
                 .fillPassword("securePassword123")
@@ -32,7 +30,5 @@ public class FormFieldsTest extends BaseTest {
 
         assertTrue(formPage.isAlertPresentWithText("Message received!"),
                 "Алерт с текстом 'Message received!' не появился");
-
-        takeScreenshot("Форма заполнена и отправлена");
     }
 }

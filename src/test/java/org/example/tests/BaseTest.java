@@ -1,5 +1,6 @@
 package org.example.tests;
 
+
 import io.qameta.allure.Allure;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,8 +10,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.time.Duration;
-
-import static org.example.config.Config.URL_SITE;
 
 /**
  * Базовый класс для всех тестов, содержащий общие настройки и методы.
@@ -28,28 +27,36 @@ public class BaseTest {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.get(URL_SITE);
     }
 
     /**
      * Метод, выполняемый после каждого теста.
-     * Делает скриншот, добавляет его в Allure-отчет и закрывает браузер.
+     * Закрывает браузер.
      */
     @AfterEach
     public void tearDown() {
         if (driver != null) {
+            driver.quit();
+            driver = null;
+        }
+    }
+
+    /**
+     * Метод для создания скриншота с ожиданием
+     */
+    protected void takeScreenshot(String screenshotName) {
+        if (driver != null) {
             try {
+                Thread.sleep(1000);
                 byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
                 Allure.getLifecycle().addAttachment(
-                        "Скриншот после теста",
+                        screenshotName,
                         "image/png",
                         "png",
                         screenshot
                 );
             } catch (Exception e) {
                 System.err.println("Не удалось сделать скриншот: " + e.getMessage());
-            } finally {
-                driver.quit();
             }
         }
     }

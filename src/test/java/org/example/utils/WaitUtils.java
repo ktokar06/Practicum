@@ -14,13 +14,14 @@ import java.util.List;
 public class WaitUtils {
 
     /**
-     * Ожидает появления алерта на странице.
+     * Ожидает появления алерта на странице с заданным таймаутом.
      *
-     * @param driver Веб-драйвер, используемый для управления браузером.
+     * @param driver  Веб-драйвер, используемый для управления браузером.
+     * @param timeout Таймаут ожидания в секундах.
      * @return {@code true}, если алерт появился, иначе {@code false}.
      */
-    public static boolean waitForAlertPresence(WebDriver driver) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    public static boolean waitForAlertPresence(WebDriver driver, int timeout) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
         try {
             wait.until(ExpectedConditions.alertIsPresent());
             return true;

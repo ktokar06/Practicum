@@ -12,10 +12,12 @@ import org.openqa.selenium.support.ui.Select;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.config.Config.EXPECTED_ALERT_TEXT;
-
 /**
- * Класс страницы с полями формы для автоматизированного тестирования веб-интерфейса.
+ * Класс для работы со страницей, содержащей различные поля формы
+ * Предоставляет методы для заполнения полей, выбора опций и отправки формы
+ *
+ * @author Your Name
+ * @version 1.0
  */
 public class FormFieldsPage extends HomePage {
 
@@ -24,74 +26,85 @@ public class FormFieldsPage extends HomePage {
     @FindBy(id = "message") private WebElement messageField;
     @FindBy(id = "submit-btn") private WebElement submitButton;
     @FindBy(xpath = "//input[@type='password']") private WebElement passwordField;
-    @FindBy(xpath = "//*[@id=\"feedbackForm\"]/ul") private List<WebElement> automationToolsList;
+    @FindBy(css = "ul li")  private List<WebElement> automationToolsList;
     @FindBy(css = "#drink2") private WebElement milkCheckbox;
     @FindBy(css = "#drink3") private WebElement coffeeCheckbox;
     @FindBy(css = "#color3") private WebElement yellowRadioButton;
     @FindBy(css = "select[name='automation']") private WebElement automationDropdown;
 
+    /**
+     * Конструктор класса FormFieldsPage
+     *
+     * @param driver экземпляр WebDriver для взаимодействия с браузером
+     */
     public FormFieldsPage(WebDriver driver) {
         super(driver);
     }
 
     /**
-     * Заполняет поле имени заданным значением
-     * @param name имя для ввода в поле
-     * @return текущий экземпляр страницы FormFieldsPage
+     * Заполняет поле имени указанным значением
+     *
+     * @param name имя для заполнения поля
+     * @return текущий экземпляр FormFieldsPage для поддержки цепочки вызовов
      */
-    @Step("Заполнение поля имени значением: {name}")
+    @Step("Заполнение поля имени: {name}")
     public FormFieldsPage fillName(String name) {
         WaitUtils.waitForElementVisible(driver, nameField, 10).sendKeys(name);
         return this;
     }
 
     /**
-     * Заполняет поле пароля заданным значением
-     * @param password пароль для ввода в поле
-     * @return текущий экземпляр страницы FormFieldsPage
+     * Заполняет поле пароля указанным значением
+     *
+     * @param password пароль для заполнения поля
+     * @return текущий экземпляр FormFieldsPage для поддержки цепочки вызовов
      */
-    @Step("Заполнение поля пароля значением: {password}")
+    @Step("Заполнение поля пароля: {password}")
     public FormFieldsPage fillPassword(String password) {
         WaitUtils.waitForElementVisible(driver, passwordField, 10).sendKeys(password);
         return this;
     }
 
     /**
-     * Выбирает указанные напитки из доступных чекбоксов
-     * @param drinks массив названий напитков для выбора (например, "Milk", "Coffee")
-     * @return текущий экземпляр страницы FormFieldsPage
+     * Выбирает указанные напитки с помощью чекбоксов
+     * Поддерживаемые значения: "milk", "coffee"
+     *
+     * @param drinks массив названий напитков для выбора
+     * @return текущий экземпляр FormFieldsPage для поддержки цепочки вызовов
      */
     @Step("Выбор напитков: {drinks}")
     public FormFieldsPage selectDrinks(String... drinks) {
         for (String drink : drinks) {
-            if ("Milk".equalsIgnoreCase(drink)) {
-                WaitUtils.waitForElementClickable(driver, milkCheckbox, 10).click();
-            } else if ("Coffee".equalsIgnoreCase(drink)) {
-                WaitUtils.waitForElementClickable(driver, coffeeCheckbox, 10).click();
+            switch (drink.toLowerCase()) {
+                case "milk":
+                    WaitUtils.waitForElementClickable(driver, milkCheckbox, 10).click();
+                    break;
+                case "coffee":
+                    WaitUtils.waitForElementClickable(driver, coffeeCheckbox, 10).click();
+                    break;
             }
         }
         return this;
     }
 
     /**
-     * Выбирает цвет из радио-кнопок
-     * @param color название цвета для выбора (например, "Yellow")
-     * @return текущий экземпляр страницы FormFieldsPage
+     * Выбирает желтый цвет с помощью радиокнопки
+     *
+     * @return текущий экземпляр FormFieldsPage для поддержки цепочки вызовов
      */
-    @Step("Выбор цвета: {color}")
-    public FormFieldsPage selectColor(String color) {
-        if ("Yellow".equalsIgnoreCase(color)) {
-            WaitUtils.waitForElementClickable(driver, yellowRadioButton, 10).click();
-        }
+    @Step("Выбор желтого цвета")
+    public FormFieldsPage selectYellowColor() {
+        WaitUtils.waitForElementClickable(driver, yellowRadioButton, 10).click();
         return this;
     }
 
     /**
-     * Выбирает значение из выпадающего списка "Do you like automation?"
-     * @param value значение для выбора: "Yes" или "No"
-     * @return текущий экземпляр страницы FormFieldsPage
+     * Выбирает значение из выпадающего списка автоматизации по видимому тексту
+     *
+     * @param value текст опции для выбора
+     * @return текущий экземпляр FormFieldsPage для поддержки цепочки вызовов
      */
-    @Step("Выбор значения из списка 'Do you like automation?': {value}")
+    @Step("Выбор значения из списка автоматизации: {value}")
     public FormFieldsPage selectAutomation(String value) {
         WaitUtils.waitForElementVisible(driver, automationDropdown, 10);
         Select select = new Select(automationDropdown);
@@ -99,73 +112,97 @@ public class FormFieldsPage extends HomePage {
         return this;
     }
 
+
+
     /**
-     * Заполняет поле email заданным значением
-     * @param email email для ввода в поле
-     * @return текущий экземпляр страницы FormFieldsPage
+     * Заполняет поле email указанным значением
+     *
+     * @param email email для заполнения поля
+     * @return текущий экземпляр FormFieldsPage для поддержки цепочки вызовов
      */
-    @Step("Заполнение поля email значением: {email}")
+    @Step("Заполнение поля email: {email}")
     public FormFieldsPage fillEmail(String email) {
         WaitUtils.waitForElementVisible(driver, emailField, 10).sendKeys(email);
         return this;
     }
 
     /**
-     * Заполняет поле сообщения информацией о количестве инструментов и самом длинном названии
+     * Заполняет поле сообщения списком инструментов автоматизации,
+     * полученных со страницы. Каждый инструмент добавляется с новой строки.
+     *
+     * @return текущий экземпляр FormFieldsPage для поддержки цепочки вызовов
      */
-    @Step("Заполнение поля сообщения информацией о инструментах автоматизации")
+    @Step("Заполнение поля сообщения информацией о количестве инструментов и самом длинном названии")
     public FormFieldsPage fillMessageWithToolsInfo() {
-        List<WebElement> visibleTools = WaitUtils.waitForAllElementsVisible(driver, automationToolsList, 10);
+        List<String> tools = getAutomationTools();
 
-        List<String> tools = new ArrayList<>();
-        for (WebElement element : visibleTools) {
-            String text = element.getText().trim();
-            if (!text.isEmpty()) {
-                tools.add(text);
+        int toolsCount = tools.size();
+
+        String longestTool = "Нет инструментов";
+        int maxLength = 0;
+
+        for (String tool : tools) {
+            if (tool.length() > maxLength) {
+                maxLength = tool.length();
+                longestTool = tool;
             }
         }
 
-        int count = tools.size();
-
-        String longestTool = "";
-        if (!tools.isEmpty()) {
-            longestTool = tools.get(0);
-            for (String tool : tools) {
-                if (tool.length() > longestTool.length()) {
-                    longestTool = tool;
-                }
-            }
-        }
-
-        String messageText = String.format("Количество: %d, Самый длинный: %s", count, longestTool);
+        String messageText = String.format(
+                "Количество инструментов автоматизации: %d\nИнструмент с наибольшим количеством символов: %s",
+                toolsCount, longestTool
+        );
 
         WaitUtils.waitForElementVisible(driver, messageField, 10).sendKeys(messageText);
         return this;
     }
 
     /**
-     * Нажимает кнопку отправки формы
+     * Получает список инструментов автоматизации со страницы
+     *
+     * @return список названий инструментов автоматизации
+     */
+    @Step("Получение списка инструментов автоматизации")
+    public List<String> getAutomationTools() {
+        List<WebElement> elements = WaitUtils.waitForAllElementsVisible(driver, automationToolsList, 10);
+        List<String> tools = new ArrayList<>();
+
+        for (WebElement element : elements) {
+            String text = element.getText().trim();
+            if (!text.isEmpty()) {
+                tools.add(text);
+            }
+        }
+        return tools;
+    }
+
+    /**
+     * Нажимает кнопку отправки формы с использованием JavaScriptExecutor
+     * для обхода возможных проблем с обычным кликом
+     *
+     * @return текущий экземпляр FormFieldsPage для поддержки цепочки вызовов
      */
     @Step("Нажатие кнопки отправки формы")
-    public void clickSubmit() {
+    public FormFieldsPage clickSubmit() {
         WebElement element = WaitUtils.waitForElementClickable(driver, submitButton, 10);
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+        return this;
     }
 
     /**
      * Проверяет наличие алерта с ожидаемым текстом
      *
-     * @return true если алерт присутствует и содержит ожидаемый текст, false в противном случае
+     * @param expectedText ожидаемый текст алерта
+     * @return true если алерт присутствует и содержит ожидаемый текст, иначе false
      */
-    @Step("Проверка наличия алерта с текстом: Message received!")
-    public boolean isAlertPresentWithText() {
+    @Step("Проверка алерта с текстом: {expectedText}")
+    public boolean isAlertPresentWithText(String expectedText) {
         try {
-            boolean isAlertPresent = WaitUtils.waitForAlertPresence(driver);
-            if (isAlertPresent) {
+            if (WaitUtils.waitForAlertPresence(driver, 5)) {
                 Alert alert = driver.switchTo().alert();
                 String actualText = alert.getText();
                 alert.accept();
-                return EXPECTED_ALERT_TEXT.equals(actualText);
+                return expectedText.equals(actualText);
             }
             return false;
         } catch (Exception e) {

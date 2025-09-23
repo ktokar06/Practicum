@@ -15,9 +15,6 @@ import java.util.List;
 /**
  * Класс для работы со страницей, содержащей различные поля формы
  * Предоставляет методы для заполнения полей, выбора опций и отправки формы
- *
- * @author Your Name
- * @version 1.0
  */
 public class FormFieldsPage extends HomePage {
 

@@ -112,8 +112,6 @@ public class FormFieldsPage extends HomePage {
         return this;
     }
 
-
-
     /**
      * Заполняет поле email указанным значением
      *
